@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import styles from "./Notes.module.scss";
 const getNotesQuery = `
   query {
@@ -9,9 +9,28 @@ const getNotesQuery = `
     }
   }
 `;
+const createNoteMutation = `
+  mutation ($data: createNoteInput) {
+    createNote(data: $data) {
+      uuid
+      text
+    }
+  }
+`;
+const deleteNoteMutation = `
+  mutation ($uuid: String) {
+    deleteNote(uuid: $uuid) {
+        message
+    }
+  }
+`;
 interface NotesProps {}
 function Notes({}: NotesProps) {
+  const [uuid, setUuid] = useState("");
   const [noteInput, setNoteInput] = useState("");
+  const [createNoteResult, createNote] = useMutation(createNoteMutation);
+  const [deleteNoteResult, deleteNote] = useMutation(deleteNoteMutation);
+
   const [result, reExecuteQuery] = useQuery({
     query: getNotesQuery,
   });
@@ -19,9 +38,17 @@ function Notes({}: NotesProps) {
     <div className={styles.Notes}>
       <div>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            console.log(noteInput);
+            const result = await createNote({
+              data: {
+                uuid: uuid || Math.random().toString(),
+                text: noteInput,
+              },
+            });
+            console.log(result);
+            setNoteInput("");
+            setUuid("");
           }}
         >
           <input
@@ -38,7 +65,27 @@ function Notes({}: NotesProps) {
       <div className={styles.notesList}>
         {(result.data?.getNotes as { text: string; uuid: string }[])?.map(
           (note, i) => (
-            <p key={i}>{note.text}</p>
+            <div key={note.uuid}>
+              <p
+                onClick={() => {
+                  setNoteInput(note.text);
+                  setUuid(note.uuid);
+                }}
+              >
+                {note.text}
+              </p>
+              <button
+                onClick={async () => {
+                  await deleteNote({
+                    uuid: note.uuid,
+                  });
+
+                  reExecuteQuery({ requestPolicy: "network-only" });
+                }}
+              >
+                delete
+              </button>
+            </div>
           )
         )}
       </div>

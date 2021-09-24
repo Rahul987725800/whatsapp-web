@@ -1,0 +1,50 @@
+.ChatItem {
+  display: flex;
+  height: 70px;
+  align-items: center;
+  padding: 0 15px;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #1a2124;
+  }
+  &.selected {
+    background-color: #2f3436;
+  }
+  .image {
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-content: center;
+  }
+  .details {
+    flex: 1;
+    margin-left: 15px;
+    padding: 10px 0;
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      .name {
+        color: #fff;
+        font-size: 18px;
+      }
+      .time {
+        color: #949695;
+      }
+    }
+
+    .message {
+      color: #949695;
+    }
+  }
+  .divider {
+    position: absolute;
+    height: 1px;
+    background-color: #9496954b;
+    width: 85%;
+    bottom: 0;
+    right: 0;
+  }
+}

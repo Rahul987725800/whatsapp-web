@@ -1,0 +1,24 @@
+.Message {
+  .block {
+    padding: 7px 10px;
+    background-color: #055c5d;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 2px;
+    word-wrap: break-word;
+  }
+  &.sent {
+    display: flex;
+    justify-content: flex-end;
+    .block {
+      background-color: #055c5d;
+    }
+  }
+  &.received {
+    display: flex;
+    justify-content: flex-start;
+    .block {
+      background-color: #242b2f;
+    }
+  }
+}
