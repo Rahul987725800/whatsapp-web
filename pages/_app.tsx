@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [client, setClient] = useState<Client>();
   useEffect(() => {
     const IP = "172.20.10.2";
-    const PORT = "8232";
+    const PORT = "8000";
     const SERVER = `${IP}:${PORT}`;
     const subscriptionClient = new SubscriptionClient(
       `ws://${SERVER}/graphql`,
