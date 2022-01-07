@@ -1,4 +1,4 @@
-import { MutableRefObject, useRef, useState } from "react";
+import { MutableRefObject, useMemo, useRef, useState } from "react";
 import { useRerender } from "./useRerender";
 class SimpleState<T> {
   private state: MutableRefObject<T>;
@@ -18,6 +18,9 @@ class SimpleState<T> {
 export const useSimpleState = <T>(initialState: T) => {
   const reRender = useRerender();
   const initialStateRef = useRef(initialState);
-  const stateRef = useRef(new SimpleState(initialStateRef, reRender));
-  return stateRef.current;
+  const state = useMemo(
+    () => new SimpleState(initialStateRef, reRender),
+    [reRender]
+  );
+  return state;
 };

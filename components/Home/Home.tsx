@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { MdMessage } from "react-icons/md";
 import { GoKebabVertical } from "react-icons/go";
@@ -50,6 +50,8 @@ function Home({}: HomeProps) {
   const user = useAppSelector((state) => state.general.user);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<MessageType[]>([]);
+  const chatMessagesContainerRef = useRef<HTMLDivElement>(null);
+
   const [getUsersResult, reExecuteGetUsersQuery] = useQuery({
     query: getUsersQuery,
   });
@@ -70,9 +72,11 @@ function Home({}: HomeProps) {
   const [createMessageResult, createMessage] = useMutation(
     createMessageMutation
   );
+
   useEffect(() => {
-    console.log(selectedUser);
-  }, [selectedUser]);
+    const scrollHeight = chatMessagesContainerRef.current?.scrollHeight;
+    chatMessagesContainerRef.current?.scrollTo({ top: scrollHeight });
+  }, [messages, selectedUser]);
   const [res] = useSubscription(
     {
       query: messageSubscription,
@@ -142,7 +146,10 @@ function Home({}: HomeProps) {
           <AiOutlineSearch color="#a8aaac" size={22} />
           <GoKebabVertical color="#a8aaac" size={20} />
         </div>
-        <div className={styles.chatMessagesContainer}>
+        <div
+          className={styles.chatMessagesContainer}
+          ref={chatMessagesContainerRef}
+        >
           <ChatMessages messages={chatMessages} />
         </div>
 

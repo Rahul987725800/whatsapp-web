@@ -22,7 +22,7 @@
   }
   .left {
     flex: 1;
-    height: 100vh;
+    height: calc(100vh);
     display: flex;
     flex-direction: column;
 
@@ -38,7 +38,13 @@
     flex-direction: column;
     .chatMessagesContainer {
       flex: 1;
-      height: 1vh;
+      overflow: auto;
+      padding: 10px 50px;
+      background-image: url(/chatbgdark.png);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      // border: 1px solid red;
     }
     .messageInputContainer {
     }

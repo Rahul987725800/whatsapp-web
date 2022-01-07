@@ -6,13 +6,8 @@ interface ChatMessagesProps {
   messages: MessageType[];
 }
 function ChatMessages({ messages }: ChatMessagesProps) {
-  const chatMessagesContainerRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const scrollHeight = chatMessagesContainerRef.current?.scrollHeight;
-    chatMessagesContainerRef.current?.scrollTo({ top: scrollHeight });
-  }, [messages]);
   return (
-    <div ref={chatMessagesContainerRef} className={styles.ChatMessages}>
+    <div className={styles.ChatMessages}>
       {messages.map((message, i) => (
         <Message key={i} message={message} />
       ))}

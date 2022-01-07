@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.1",
+    "bad-words": "^3.0.4",
     "classnames": "^2.3.1",
     "faker": "^5.5.3",
     "graphql": "^15.6.0",
@@ -24,6 +25,7 @@
     "urql": "^2.0.5"
   },
   "devDependencies": {
+    "@types/bad-words": "^3.0.1",
     "@types/faker": "^5.5.8",
     "@types/react": "17.0.24",
     "eslint": "7.32.0",
