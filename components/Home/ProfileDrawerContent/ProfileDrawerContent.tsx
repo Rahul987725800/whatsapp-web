@@ -3,7 +3,7 @@ import Image from "next/image";
 import { MdEdit, MdCheck } from "react-icons/md";
 import { IconType } from "react-icons/lib";
 import TextareaAutosize from "react-textarea-autosize";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import produce from "immer";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
@@ -130,14 +130,20 @@ const InputBlock = ({ field, setDetails }: InputBlockProps) => {
     // console.log(`update ${field.label} with ${field.value}`);
     field.update(field.value);
   };
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   return (
     <div className={styles.inputBlock}>
       <label>{field.label}</label>
       <div className={styles.inputContainer}>
         <TextareaAutosize
+          ref={textAreaRef}
           className={classNames(styles.textArea, {
             [styles.editing]: field.editing,
           })}
+          onFocus={() => {
+            // console.log("focus");
+            if (!field.editing) textAreaRef.current?.blur();
+          }}
           placeholder={field.placeholder}
           value={field.value}
           maxRows={field.maxRows}
@@ -161,6 +167,13 @@ const InputBlock = ({ field, setDetails }: InputBlockProps) => {
           onClick={() => {
             if (field.editing) {
               update();
+            } else {
+              setTimeout(() => {
+                if (textAreaRef.current) {
+                  textAreaRef.current.selectionStart = field.value.length;
+                  textAreaRef.current.focus();
+                }
+              });
             }
             setDetails((prev) =>
               produce(prev, (draft) => {

@@ -12,7 +12,7 @@ function Message({ message }: MessageProps) {
     <div
       className={classNames(
         styles.Message,
-        styles[message.from === user.phone ? "sent" : "received"]
+        styles[message.from === user!.phone ? "sent" : "received"]
       )}
     >
       <div className={styles.block}>{message.text}</div>

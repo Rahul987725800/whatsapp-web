@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useMutation } from "urql";
+import { useMutation, useQuery } from "urql";
 import styles from "./Login.module.scss";
 import { setUser } from "store/reducers/generalReducer";
 import { useRouter } from "next/router";
 interface LoginProps {}
-
+const getUserQuery = `
+query($phone: String) {
+  getUser(phone: $phone) {
+    name
+    phone
+  }
+}
+`;
 const createUserMutation = `
   mutation ($data: createUserInput) {
     createUser(data: $data) {
@@ -29,13 +36,27 @@ function Login({}: LoginProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [createUserResult, createUser] = useMutation(createUserMutation);
-  const login = async (name: string, phone: string) => {
+  const [firstDummyUserResult] = useQuery({
+    query: getUserQuery,
+    variables: {
+      phone: "88888",
+    },
+  });
+  const [secondDummyUserResult] = useQuery({
+    query: getUserQuery,
+    variables: {
+      phone: "00000",
+    },
+  });
+  const login = async (phone: string, name?: string) => {
+    // console.log({ phone, name });
     const response = await createUser({
       data: {
-        name: name !== "" ? name : phone,
+        name: name ? name : phone,
         phone,
       },
     });
+    // console.log(response);
     if (response.data) {
       console.log(response.data.createUser);
       dispatch(setUser(response.data.createUser));
@@ -44,7 +65,7 @@ function Login({}: LoginProps) {
   };
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    login(name, phone);
+    login(phone, name);
   };
   return (
     <div className={styles.Login}>
@@ -81,18 +102,18 @@ function Login({}: LoginProps) {
             <button
               className={styles.styledButton}
               onClick={() => {
-                login("dummy 1", "88888");
+                login(firstDummyUserResult.data.getUser.phone);
               }}
             >
-              dummy 1
+              {firstDummyUserResult.data?.getUser.name}
             </button>
             <button
               className={styles.styledButton}
               onClick={() => {
-                login("dummy 2", "00000");
+                login(secondDummyUserResult.data.getUser.phone);
               }}
             >
-              dummy 2
+              {secondDummyUserResult.data?.getUser.name}
             </button>
           </div>
         </div>
