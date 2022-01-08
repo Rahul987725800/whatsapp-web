@@ -1,0 +1,67 @@
+.ProfileDrawerContent {
+  padding: 30px;
+  padding-bottom: 0;
+  .imageContainer {
+    margin: auto;
+    margin-bottom: 30px;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  .inputBlock {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(#000, 0.16);
+    padding: 8px 0;
+    // border: 1px solid red;
+    label {
+      color: #009688;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .inputContainer {
+      position: relative;
+
+      .textArea {
+        padding-bottom: 8px;
+        padding-right: 30px;
+        width: 100%;
+        background-color: transparent;
+        color: #d4d5d7;
+        font-size: 16px;
+        font-family: inherit;
+        outline: none;
+        border: none;
+        resize: none;
+        border-bottom: 2px solid #00af9c;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      .iconContainer {
+        position: absolute;
+        top: -1px;
+        right: 0;
+        width: 29px;
+        height: 29px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        display: flex;
+        &.confirm {
+          &:active {
+            border-color: #009688;
+          }
+        }
+        .icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+    }
+  }
+}

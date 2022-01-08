@@ -4,8 +4,10 @@ import { BiLeftArrowAlt } from "react-icons/bi";
 interface SidebarProps {
   isOpen: boolean;
   close: () => void;
+  children: any;
+  head: string;
 }
-const Sidebar = ({ isOpen, close }: SidebarProps) => {
+const Sidebar = ({ isOpen, close, children, head }: SidebarProps) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -20,9 +22,9 @@ const Sidebar = ({ isOpen, close }: SidebarProps) => {
             <div className={styles.arrowContainer} onClick={close}>
               <BiLeftArrowAlt fontSize={30} />
             </div>
-            <div className={styles.head}>New chat</div>
+            <div className={styles.head}>{head}</div>
           </div>
-          <div className={styles.rest}></div>
+          <div className={styles.rest}>{children}</div>
         </motion.div>
       )}
     </AnimatePresence>

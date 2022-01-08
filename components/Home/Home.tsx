@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import MenuIcon from "components/Shared/MenuIcon/MenuIcon";
 import { setUser } from "store/reducers/generalReducer";
 import Sidebar from "components/Shared/Sidebar/Sidebar";
+import ProfileDrawerContent from "./ProfileDrawerContent/ProfileDrawerContent";
 const messageSubscription = `
 subscription ($to: String) {
   message(to: $to) {
@@ -55,6 +56,7 @@ function Home({}: HomeProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [newChatDrawerOpen, setNewChatDrawerOpen] = useState(false);
+  const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   useEffect(() => {
     if (!user || !user.phone) {
       router.push("/login");
@@ -133,10 +135,31 @@ function Home({}: HomeProps) {
           <Sidebar
             isOpen={newChatDrawerOpen}
             close={() => setNewChatDrawerOpen(false)}
-          />
+            head="New chat"
+          >
+            <AllChats
+              users={getUsersResult.data?.getUsers.filter(
+                (u: UserType) => u.phone !== user.phone
+              )}
+              selectedUser={selectedUser}
+              setSelectedUser={setSelectedUser}
+            />
+          </Sidebar>
+        </div>
+        <div className={styles.sidebarContainer}>
+          <Sidebar
+            isOpen={profileDrawerOpen}
+            close={() => setProfileDrawerOpen(false)}
+            head="Profile"
+          >
+            <ProfileDrawerContent />
+          </Sidebar>
         </div>
         <div className={styles.topBar}>
-          <div className={styles.profileImageContainer}>
+          <div
+            className={styles.profileImageContainer}
+            onClick={() => setProfileDrawerOpen(true)}
+          >
             <Image src="/profile.jpg" alt="profile" width={40} height={40} />
           </div>
           <div className={styles.name}>{user?.name}</div>
