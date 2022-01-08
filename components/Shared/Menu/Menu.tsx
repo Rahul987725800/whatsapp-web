@@ -5,7 +5,7 @@ interface MenuProps {
   open: boolean;
   menuList: { value: string; func: () => void }[];
 }
-const transition = { type: "tween", ease: "easeIn", duration: 0.2 };
+
 const Menu = ({ open, menuList }: MenuProps) => {
   return (
     <div>
@@ -16,13 +16,12 @@ const Menu = ({ open, menuList }: MenuProps) => {
             animate={{
               opacity: 1,
               scale: 1,
-              transition: transition,
             }}
             exit={{
               opacity: 0,
               scale: 0,
-              transition: transition,
             }}
+            transition={{ type: "tween", ease: "easeIn", duration: 0.2 }}
             style={{
               width: "min-content",
               transformOrigin: "100% 0",

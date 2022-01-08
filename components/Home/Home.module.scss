@@ -22,13 +22,18 @@
   }
   .left {
     flex: 1;
-    height: calc(100vh);
+    height: 100vh;
     display: flex;
     flex-direction: column;
-
-    .allChatsContainer {
+    position: relative;
+    .restContainer {
       flex: 1;
       overflow-y: auto;
+    }
+    .sidebarContainer {
+      position: absolute;
+      height: 100%;
+      width: 100%;
     }
   }
   .right {

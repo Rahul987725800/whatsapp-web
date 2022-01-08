@@ -7,8 +7,14 @@ interface MenuIconProps {
   active?: boolean;
   Icon: IconType;
   menuList?: { value: string; func: () => void }[];
+  onClick?: () => void;
 }
-const MenuIcon = ({ active = false, Icon, menuList }: MenuIconProps) => {
+const MenuIcon = ({
+  active = false,
+  Icon,
+  menuList,
+  onClick,
+}: MenuIconProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const cb = () => {
@@ -22,6 +28,7 @@ const MenuIcon = ({ active = false, Icon, menuList }: MenuIconProps) => {
   return (
     <div
       onClick={(e) => {
+        onClick?.();
         e.stopPropagation();
         setMenuOpen((prev) => !prev);
       }}

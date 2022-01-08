@@ -1,4 +1,4 @@
-import Menu from "components/Shared/Menu/Menu";
+import Sidebar from "components/Shared/Sidebar/Sidebar";
 import React, { useEffect, useState } from "react";
 
 function Practice() {
@@ -14,7 +14,7 @@ function Practice() {
         toggle
       </button>
       <div>
-        <Menu open={openMenu} />
+        <Sidebar />
       </div>
     </div>
   );

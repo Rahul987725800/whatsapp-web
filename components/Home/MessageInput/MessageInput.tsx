@@ -22,6 +22,7 @@ function MessageInput({
       <ImAttachment color="#a8aaac" size={22} className={styles.icon} />
 
       <TextareaAutosize
+        placeholder="Type a message"
         ref={textAreaRef}
         value={messageInput}
         onKeyDown={(e) => {

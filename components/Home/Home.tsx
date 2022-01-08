@@ -13,8 +13,8 @@ import { useMutation, useQuery, useSubscription } from "urql";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useRouter } from "next/router";
 import MenuIcon from "components/Shared/MenuIcon/MenuIcon";
-import Menu from "components/Shared/Menu/Menu";
 import { setUser } from "store/reducers/generalReducer";
+import Sidebar from "components/Shared/Sidebar/Sidebar";
 const messageSubscription = `
 subscription ($to: String) {
   message(to: $to) {
@@ -54,6 +54,7 @@ function Home({}: HomeProps) {
   const user = useAppSelector((state) => state.general.user);
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const [newChatDrawerOpen, setNewChatDrawerOpen] = useState(false);
   useEffect(() => {
     if (!user || !user.phone) {
       router.push("/login");
@@ -128,13 +129,22 @@ function Home({}: HomeProps) {
   return (
     <div className={styles.Home}>
       <div className={styles.left}>
+        <div className={styles.sidebarContainer}>
+          <Sidebar
+            isOpen={newChatDrawerOpen}
+            close={() => setNewChatDrawerOpen(false)}
+          />
+        </div>
         <div className={styles.topBar}>
           <div className={styles.profileImageContainer}>
             <Image src="/profile.jpg" alt="profile" width={40} height={40} />
           </div>
           <div className={styles.name}>{user?.name}</div>
           <div style={{ flex: 1 }}></div>
-          <MenuIcon Icon={MdMessage} />
+          <MenuIcon
+            Icon={MdMessage}
+            onClick={() => setNewChatDrawerOpen(true)}
+          />
           <MenuIcon
             Icon={GoKebabVertical}
             menuList={[
@@ -153,7 +163,7 @@ function Home({}: HomeProps) {
             ]}
           />
         </div>
-        <div className={styles.allChatsContainer}>
+        <div className={styles.restContainer}>
           <AllChats
             users={getUsersResult.data?.getUsers.filter(
               (u: UserType) => u.phone !== user.phone
