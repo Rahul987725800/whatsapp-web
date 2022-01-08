@@ -10,7 +10,11 @@ import MessageInput from "./MessageInput/MessageInput";
 import ChatMessages from "./ChatMessages/ChatMessages";
 import { MessageType, UserType } from "types/ChatTypes";
 import { useMutation, useQuery, useSubscription } from "urql";
-import { useAppSelector } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useRouter } from "next/router";
+import MenuIcon from "components/Shared/MenuIcon/MenuIcon";
+import Menu from "components/Shared/Menu/Menu";
+import { setUser } from "store/reducers/generalReducer";
 const messageSubscription = `
 subscription ($to: String) {
   message(to: $to) {
@@ -48,6 +52,13 @@ const getMessagesForUserQuery = `
 interface HomeProps {}
 function Home({}: HomeProps) {
   const user = useAppSelector((state) => state.general.user);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (!user || !user.phone) {
+      router.push("/login");
+    }
+  }, [router, user]);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<MessageType[]>([]);
   const chatMessagesContainerRef = useRef<HTMLDivElement>(null);
@@ -123,8 +134,24 @@ function Home({}: HomeProps) {
           </div>
           <div className={styles.name}>{user?.name}</div>
           <div style={{ flex: 1 }}></div>
-          <MdMessage color="#a8aaac" size={22} />
-          <GoKebabVertical color="#a8aaac" size={20} />
+          <MenuIcon Icon={MdMessage} />
+          <MenuIcon
+            Icon={GoKebabVertical}
+            menuList={[
+              {
+                value: "New Group",
+                func: () => {
+                  console.log("New Group");
+                },
+              },
+              {
+                value: "Log out",
+                func: () => {
+                  dispatch(setUser({ name: "", phone: "" }));
+                },
+              },
+            ]}
+          />
         </div>
         <div className={styles.allChatsContainer}>
           <AllChats
@@ -143,8 +170,8 @@ function Home({}: HomeProps) {
           </div>
           <div className={styles.name}>{selectedUser?.name}</div>
           <div style={{ flex: 1 }}></div>
-          <AiOutlineSearch color="#a8aaac" size={22} />
-          <GoKebabVertical color="#a8aaac" size={20} />
+          <MenuIcon Icon={AiOutlineSearch} />
+          <MenuIcon Icon={GoKebabVertical} />
         </div>
         <div
           className={styles.chatMessagesContainer}

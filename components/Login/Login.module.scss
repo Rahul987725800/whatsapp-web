@@ -1,0 +1,64 @@
+.Login {
+  background-image: url(/chatbgdark.png);
+  height: 100vh;
+  position: relative;
+  .formContainer {
+    width: 100%;
+    max-width: 400px;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: #1e2428;
+    padding: 20px 20px;
+    border-radius: 8px;
+    form {
+      .formInput {
+        width: 100%;
+        flex: 1;
+        background-color: #303538;
+        color: white;
+        padding: 10px;
+        border-radius: 20px;
+        font-size: 16px;
+        font-family: inherit;
+        outline: none;
+        border: none;
+        margin-bottom: 10px;
+      }
+
+      .buttonContainer {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+      }
+    }
+    .styledButton {
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 4px;
+      color: white;
+      background-color: transparent;
+      outline: none;
+      border: none;
+      font-size: 16px;
+      background-color: #303538;
+      &:hover {
+        color: #23cc63;
+      }
+    }
+    .testInfo {
+      color: white;
+      .buttons {
+        display: flex;
+        gap: 15px;
+        .styledButton {
+          font-size: 14px;
+          &:hover {
+            color: yellowgreen;
+          }
+        }
+      }
+    }
+  }
+}
