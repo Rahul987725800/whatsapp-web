@@ -58,7 +58,7 @@ function Home({}: HomeProps) {
   const [newChatDrawerOpen, setNewChatDrawerOpen] = useState(false);
   const [profileDrawerOpen, setProfileDrawerOpen] = useState(false);
   useEffect(() => {
-    if (!user || !user.phone) {
+    if (!user || !user?.phone) {
       router.push("/login");
     }
   }, [router, user]);
@@ -73,9 +73,9 @@ function Home({}: HomeProps) {
     {
       query: getMessagesForUserQuery,
       variables: {
-        phone: user.phone,
+        phone: user?.phone,
       },
-      pause: !!!user.phone,
+      pause: !!!user?.phone,
     }
   );
   useEffect(() => {
@@ -95,7 +95,7 @@ function Home({}: HomeProps) {
     {
       query: messageSubscription,
       variables: {
-        to: user.phone,
+        to: user?.phone,
       },
     },
     (_, res) => {
@@ -109,13 +109,17 @@ function Home({}: HomeProps) {
       const messageInputCopy = messageInput;
       setMessages((prev) => [
         ...prev,
-        { text: messageInputCopy, to: selectedUser.phone, from: user.phone },
+        {
+          text: messageInputCopy,
+          to: selectedUser.phone,
+          from: user?.phone || "",
+        },
       ]);
 
       const result = await createMessage({
         text: messageInputCopy,
         to: selectedUser?.phone,
-        from: user.phone,
+        from: user?.phone,
       });
       console.log(result);
       setMessageInput("");
@@ -139,7 +143,7 @@ function Home({}: HomeProps) {
           >
             <AllChats
               users={getUsersResult.data?.getUsers.filter(
-                (u: UserType) => u.phone !== user.phone
+                (u: UserType) => u.phone !== user?.phone
               )}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
@@ -180,7 +184,7 @@ function Home({}: HomeProps) {
               {
                 value: "Log out",
                 func: () => {
-                  dispatch(setUser({ name: "", phone: "" }));
+                  dispatch(setUser(null));
                 },
               },
             ]}
@@ -189,7 +193,7 @@ function Home({}: HomeProps) {
         <div className={styles.restContainer}>
           <AllChats
             users={getUsersResult.data?.getUsers.filter(
-              (u: UserType) => u.phone !== user.phone
+              (u: UserType) => u.phone !== user?.phone
             )}
             selectedUser={selectedUser}
             setSelectedUser={setSelectedUser}

@@ -5,11 +5,20 @@ import styles from "./Login.module.scss";
 import { setUser } from "store/reducers/generalReducer";
 import { useRouter } from "next/router";
 interface LoginProps {}
+
 const createUserMutation = `
   mutation ($data: createUserInput) {
     createUser(data: $data) {
+      _id
       name
       phone
+      profile {
+        _id
+        about
+        profilePhotoUrl
+        status
+        userId
+      }
     }
   }
 `;
@@ -28,12 +37,8 @@ function Login({}: LoginProps) {
       },
     });
     if (response.data) {
-      const fetchedUser = {
-        name: response.data.createUser.name,
-        phone: response.data.createUser.phone,
-      };
-      console.log({ fetchedUser });
-      dispatch(setUser(fetchedUser));
+      console.log(response.data.createUser);
+      dispatch(setUser(response.data.createUser));
       router.push("/");
     }
   };

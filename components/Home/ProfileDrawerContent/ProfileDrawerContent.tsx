@@ -2,13 +2,14 @@ import styles from "./ProfileDrawerContent.module.scss";
 import Image from "next/image";
 import { MdEdit, MdCheck } from "react-icons/md";
 import { IconType } from "react-icons/lib";
-import TextareaAutosize, {
-  TextareaAutosizeProps,
-} from "react-textarea-autosize";
+import TextareaAutosize from "react-textarea-autosize";
 import { useState } from "react";
 import produce from "immer";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useMutation } from "urql";
+import { setUser } from "store/reducers/generalReducer";
 type FieldProps = {
   key: string;
   value: string;
@@ -18,29 +19,86 @@ type FieldProps = {
   label: string;
   maxRows: number;
   maxLength: number;
+  update: (v: string) => void;
 };
+const updateProfileMutation = `
+mutation($data: updateProfileInput) {
+  updateProfile(_id:"61d97db69b0201a56c0c30d9", data: $data) {
+    _id
+    about
+    profilePhotoUrl
+    status
+    userId
+  }
+}
+`;
+const updateUserMutation = `
+  mutation($_id: ID, $data: updateUserInput) {
+  updateUser(_id: $_id, data: $data) {
+    name
+  }
+}
+`;
 interface ProfileDrawerContentProps {}
 const ProfileDrawerContent = ({}: ProfileDrawerContentProps) => {
+  const user = useAppSelector((state) => state.general.user);
+  const [updateProfileResult, updateProfile] = useMutation(
+    updateProfileMutation
+  );
+  const [updateUserResult, updateUser] = useMutation(updateUserMutation);
+  const dispatch = useAppDispatch();
   const [details, setDetails] = useState<{ [key: string]: FieldProps }>({
     name: {
       key: "name",
-      value: "",
+      value: user!.name,
       error: "",
       editing: false,
       placeholder: "Name",
       label: "Your name",
       maxRows: 1,
       maxLength: 52,
+      update: async (newValue) => {
+        // console.log(this.value);
+        const result = await updateUser({
+          _id: user!._id,
+          data: {
+            name: newValue,
+          },
+        });
+        // console.log(result);
+        dispatch(
+          setUser({
+            ...user!,
+            ...result.data?.updateUser,
+          })
+        );
+      },
     },
     about: {
       key: "about",
-      value: "",
+      value: user!.profile?.about || "Hey there! I am using WhatsApp.",
       error: "",
       editing: false,
       placeholder: "About",
       label: "About",
       maxRows: 3,
       maxLength: Infinity,
+      update: async (newValue) => {
+        // console.log(this.value);
+        const result = await updateProfile({
+          _id: user!.profile?._id,
+          data: {
+            about: newValue,
+          },
+        });
+        // console.log(result);
+        dispatch(
+          setUser({
+            ...user!,
+            profile: result.data.updateProfile,
+          })
+        );
+      },
     },
   });
   type detailsKey = keyof typeof details;
@@ -52,11 +110,7 @@ const ProfileDrawerContent = ({}: ProfileDrawerContentProps) => {
       {Object.keys(details).map((v) => {
         const key: detailsKey = v as any;
         return (
-          <InputBlock
-            key={key}
-            fieldDetails={details[key]}
-            setDetails={setDetails}
-          />
+          <InputBlock key={key} field={details[key]} setDetails={setDetails} />
         );
       })}
     </div>
@@ -64,32 +118,35 @@ const ProfileDrawerContent = ({}: ProfileDrawerContentProps) => {
 };
 export default ProfileDrawerContent;
 interface InputBlockProps {
-  fieldDetails: FieldProps;
+  field: FieldProps;
   setDetails: React.Dispatch<
     React.SetStateAction<{
       [key: string]: FieldProps;
     }>
   >;
 }
-const InputBlock = ({ fieldDetails, setDetails }: InputBlockProps) => {
+const InputBlock = ({ field, setDetails }: InputBlockProps) => {
   const update = () => {
-    console.log(`update ${fieldDetails.label} with ${fieldDetails.value}`);
+    // console.log(`update ${field.label} with ${field.value}`);
+    field.update(field.value);
   };
   return (
     <div className={styles.inputBlock}>
-      <label>{fieldDetails.label}</label>
+      <label>{field.label}</label>
       <div className={styles.inputContainer}>
         <TextareaAutosize
-          className={styles.textArea}
-          placeholder={fieldDetails.placeholder}
-          value={fieldDetails.value}
-          maxRows={fieldDetails.maxRows}
-          maxLength={fieldDetails.maxLength}
+          className={classNames(styles.textArea, {
+            [styles.editing]: field.editing,
+          })}
+          placeholder={field.placeholder}
+          value={field.value}
+          maxRows={field.maxRows}
+          maxLength={field.maxLength}
           onChange={(e) => {
-            if (fieldDetails.editing) {
+            if (field.editing) {
               setDetails((prev) =>
                 produce(prev, (draft) => {
-                  draft[fieldDetails.key].value = e.target.value;
+                  draft[field.key].value = e.target.value;
                 })
               );
             }
@@ -99,22 +156,21 @@ const InputBlock = ({ fieldDetails, setDetails }: InputBlockProps) => {
         <span
           className={classNames({
             [styles.iconContainer]: true,
-            [styles.confirm]: fieldDetails.editing,
+            [styles.confirm]: field.editing,
           })}
           onClick={() => {
-            if (fieldDetails.editing) {
+            if (field.editing) {
               update();
             }
             setDetails((prev) =>
               produce(prev, (draft) => {
-                draft[fieldDetails.key].editing =
-                  !draft[fieldDetails.key].editing;
+                draft[field.key].editing = !draft[field.key].editing;
               })
             );
           }}
         >
-          <EditToggleIcon Icon={MdCheck} show={fieldDetails.editing} />
-          <EditToggleIcon Icon={MdEdit} show={!fieldDetails.editing} />
+          <EditToggleIcon Icon={MdCheck} show={field.editing} />
+          <EditToggleIcon Icon={MdEdit} show={!field.editing} />
         </span>
       </div>
     </div>
