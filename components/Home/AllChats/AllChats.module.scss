@@ -1,4 +1,43 @@
 .AllChats {
   height: 100%;
   background-color: rgb(18, 27, 31);
+  .searchInputContainer {
+    position: relative;
+    padding: 7px 15px;
+    // border: 1px solid red;
+    .searchInput {
+      padding-left: 60px;
+      padding-right: 40px;
+      height: 35px;
+      width: 100%;
+      flex: 1;
+      background-color: #303538;
+      color: white;
+      border-radius: 20px;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      border: none;
+      &::placeholder {
+        color: var(--color-gray);
+        opacity: 1;
+      }
+    }
+  }
+}
+.RotatingIcon {
+  position: absolute;
+  left: 30px;
+  top: 28%;
+  color: var(--color-gray);
+  cursor: pointer;
+}
+.BloomingIcon {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%) !important;
+  font-size: 18px;
+  color: var(--color-gray);
+  cursor: pointer;
 }

@@ -1,7 +1,7 @@
 .ChatItem {
   display: flex;
   height: 70px;
-  align-items: center;
+  align-items: flex-end;
   padding: 0 15px;
   position: relative;
 
@@ -13,6 +13,7 @@
     background-color: #2f3436;
   }
   .image {
+    align-self: center;
     border-radius: 50%;
     overflow: hidden;
     display: grid;
@@ -21,7 +22,7 @@
   .details {
     flex: 1;
     margin-left: 15px;
-    padding: 10px 0;
+    padding-top: 10px;
 
     .row {
       display: flex;
@@ -31,20 +32,15 @@
         font-size: 18px;
       }
       .time {
-        color: #949695;
+        color: var(--color-gray);
       }
     }
 
     .message {
-      color: #949695;
+      color: var(--color-gray);
     }
-  }
-  .divider {
-    position: absolute;
-    height: 1px;
-    background-color: #9496954b;
-    width: 85%;
-    bottom: 0;
-    right: 0;
+    .divider {
+      margin-top: 10px;
+    }
   }
 }

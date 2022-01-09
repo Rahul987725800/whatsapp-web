@@ -14,3 +14,6 @@ a {
 * {
   box-sizing: border-box;
 }
+:root {
+  --color-gray: #949695;
+}
