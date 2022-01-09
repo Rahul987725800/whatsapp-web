@@ -205,15 +205,17 @@ function Home({}: HomeProps) {
         </div>
       </div>
       <div className={styles.right}>
-        <div className={styles.topBar}>
-          <div className={styles.profileImageContainer}>
-            <Image src="/profile.jpg" alt="profile" width={40} height={40} />
+        {selectedUser && (
+          <div className={styles.topBar}>
+            <div className={styles.profileImageContainer}>
+              <Image src="/profile.jpg" alt="profile" width={40} height={40} />
+            </div>
+            <div className={styles.name}>{selectedUser?.name}</div>
+            <div style={{ flex: 1 }}></div>
+            <MenuIcon Icon={AiOutlineSearch} />
+            <MenuIcon Icon={GoKebabVertical} />
           </div>
-          <div className={styles.name}>{selectedUser?.name}</div>
-          <div style={{ flex: 1 }}></div>
-          <MenuIcon Icon={AiOutlineSearch} />
-          <MenuIcon Icon={GoKebabVertical} />
-        </div>
+        )}
         <div
           className={styles.chatMessagesContainer}
           ref={chatMessagesContainerRef}
@@ -221,13 +223,15 @@ function Home({}: HomeProps) {
           <ChatMessages messages={chatMessages} />
         </div>
 
-        <div className={styles.messageInputContainer}>
-          <MessageInput
-            messageInput={messageInput}
-            setMessageInput={setMessageInput}
-            sendMessage={sendMessage}
-          />
-        </div>
+        {selectedUser && (
+          <div className={styles.messageInputContainer}>
+            <MessageInput
+              messageInput={messageInput}
+              setMessageInput={setMessageInput}
+              sendMessage={sendMessage}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

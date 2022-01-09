@@ -105,7 +105,9 @@ function Login({}: LoginProps) {
                 login(firstDummyUserResult.data.getUser.phone);
               }}
             >
-              {firstDummyUserResult.data?.getUser.name}
+              {firstDummyUserResult.fetching
+                ? "Loading..."
+                : firstDummyUserResult.data?.getUser.name}
             </button>
             <button
               className={styles.styledButton}
@@ -113,7 +115,9 @@ function Login({}: LoginProps) {
                 login(secondDummyUserResult.data.getUser.phone);
               }}
             >
-              {secondDummyUserResult.data?.getUser.name}
+              {secondDummyUserResult.fetching
+                ? "Loading..."
+                : secondDummyUserResult.data?.getUser.name}
             </button>
           </div>
         </div>
