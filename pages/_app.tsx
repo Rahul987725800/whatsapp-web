@@ -15,9 +15,14 @@ import { useEffect, useState } from "react";
 function MyApp({ Component, pageProps }: AppProps) {
   const [client, setClient] = useState<Client>();
   useEffect(() => {
+    // console.log(process.env.NEXT_PUBLIC_SERVER);
     const IP = "192.168.43.184";
     const PORT = "8121";
-    const SERVER = `${IP}:${PORT}`;
+    const LOCAL_SERVER = `${IP}:${PORT}`;
+    const LOCAL_PREFIX = "http";
+    const PREFIX = "https";
+    const SERVER = process.env.NEXT_PUBLIC_SERVER;
+
     const subscriptionClient = new SubscriptionClient(
       `ws://${SERVER}/graphql`,
       {
@@ -31,7 +36,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       console.log("subscriptionClient error");
     });
     const client = new Client({
-      url: `http://${SERVER}/graphql`,
+      url: `${PREFIX}://${SERVER}/graphql`,
       exchanges: [
         ...defaultExchanges,
         subscriptionExchange({
