@@ -13,9 +13,7 @@ function Practice() {
       >
         toggle
       </button>
-      <div>
-        <Sidebar />
-      </div>
+      <div></div>
     </div>
   );
 }
