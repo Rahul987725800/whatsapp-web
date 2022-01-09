@@ -132,6 +132,17 @@ function Home({}: HomeProps) {
         message.from === selectedUser?.phone
     );
   }, [messages, selectedUser]);
+  const chats = useMemo(
+    () =>
+      getUsersResult.data?.getUsers.filter(
+        (u: UserType) =>
+          u.phone !== user?.phone &&
+          messages.some((message) => {
+            return message.to === u.phone || message.from === u.phone;
+          })
+      ),
+    [getUsersResult.data?.getUsers, messages, user?.phone]
+  );
   return (
     <div className={styles.Home}>
       <div className={styles.left}>
@@ -147,6 +158,7 @@ function Home({}: HomeProps) {
               )}
               selectedUser={selectedUser}
               setSelectedUser={setSelectedUser}
+              onSelected={() => setNewChatDrawerOpen(false)}
             />
           </Sidebar>
         </div>
@@ -192,9 +204,7 @@ function Home({}: HomeProps) {
         </div>
         <div className={styles.restContainer}>
           <AllChats
-            users={getUsersResult.data?.getUsers.filter(
-              (u: UserType) => u.phone !== user?.phone
-            )}
+            users={chats}
             selectedUser={selectedUser}
             setSelectedUser={setSelectedUser}
           />

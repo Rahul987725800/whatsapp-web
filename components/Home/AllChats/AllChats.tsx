@@ -7,12 +7,14 @@ interface AllChatsProps {
   users: UserType[];
   selectedUser?: UserType;
   setSelectedUser: React.Dispatch<React.SetStateAction<UserType | undefined>>;
+  onSelected?: () => void;
 }
 
 function AllChats({
   users = [],
   selectedUser,
   setSelectedUser,
+  onSelected,
 }: AllChatsProps) {
   return (
     <div className={styles.AllChats}>
@@ -23,6 +25,7 @@ function AllChats({
           message={item.phone}
           time="yesterday"
           selectChat={() => {
+            onSelected?.();
             setSelectedUser(item);
           }}
           selected={!!selectedUser && selectedUser.phone === item.phone}
