@@ -30,6 +30,9 @@
       .name {
         color: #fff;
         font-size: 18px;
+        .highlight {
+          color: var(--color-sea-green);
+        }
       }
       .time {
         color: var(--color-gray);

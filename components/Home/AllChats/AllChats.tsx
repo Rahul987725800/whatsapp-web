@@ -1,5 +1,5 @@
 import Divider from "components/Shared/Divider/Divider";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { UserType } from "types/ChatTypes";
 import styles from "./AllChats.module.scss";
 import ChatItem from "./ChatItem/ChatItem";
@@ -7,7 +7,6 @@ import { BiLeftArrowAlt } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconType } from "react-icons/lib";
 
 interface AllChatsProps {
   users: UserType[];
@@ -23,12 +22,18 @@ function AllChats({
   onSelected,
 }: AllChatsProps) {
   const [searchTerm, setSearchTerm] = useState("");
+  const matchingUsers = useMemo(() => {
+    return users.filter((u) =>
+      u.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [users, searchTerm]);
   return (
     <div className={styles.AllChats}>
       <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       <Divider />
-      {users.map((item, i) => (
+      {matchingUsers.map((item, i) => (
         <ChatItem
+          searchTerm={searchTerm}
           key={i}
           name={item.name}
           message={item.phone}
@@ -52,9 +57,7 @@ interface SearchInputProps {
 const SearchInput = ({ searchTerm, setSearchTerm }: SearchInputProps) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    console.log({ editing });
-  }, [editing]);
+
   return (
     <div className={styles.searchInputContainer}>
       <RotatingIcon
