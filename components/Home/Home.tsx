@@ -188,12 +188,6 @@ function Home({}: HomeProps) {
             Icon={GoKebabVertical}
             menuList={[
               {
-                value: "New Group",
-                func: () => {
-                  console.log("New Group");
-                },
-              },
-              {
                 value: "Log out",
                 func: () => {
                   dispatch(setUser(null));
