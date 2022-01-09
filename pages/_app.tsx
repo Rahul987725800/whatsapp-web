@@ -20,11 +20,13 @@ function MyApp({ Component, pageProps }: AppProps) {
     const PORT = "8121";
     const LOCAL_SERVER = `${IP}:${PORT}`;
     const LOCAL_PREFIX = "http";
+    const LOCAL_SOCKET_PREFIX = "ws";
     const PREFIX = "https";
+    const SOCKET_PREFIX = "wss";
     const SERVER = process.env.NEXT_PUBLIC_SERVER;
 
     const subscriptionClient = new SubscriptionClient(
-      `ws://${SERVER}/graphql`,
+      `${SOCKET_PREFIX}://${SERVER}/graphql`,
       {
         reconnect: true,
       }
